@@ -13,7 +13,7 @@ DHT dht(DHTPIN, DHTTYPE);   //   DHT11 DHT21 DHT22
 // Connect pin 2 of the sensor to whatever your DHTPIN is
 // Connect pin 4 (on the right) of the sensor to GROUND
 // Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
-
+//comment
 
 #if defined(ARDUINO_ARCH_AVR)
     #define debug  Serial
