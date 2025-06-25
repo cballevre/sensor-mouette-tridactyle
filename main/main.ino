@@ -1,5 +1,6 @@
 #include "Grove_Temperature_And_Humidity_Sensor.h"
 #include "Wire.h"
+#include "DFRobot_MCP9808.h"
 
 // Configuration for temperature and humidity
 #define DHTTYPE DHT22 // DHT 22 (AM2302)
@@ -11,10 +12,18 @@ DHT dht(DHTPIN, DHTTYPE);
 uint8_t buf[4] = {0};
 uint16_t data, data1;
 
+// Configuration for temperature
+#define I2C_ADDRESS  MCP9808_ADDRESS_7
+DFRobot_MCP9808_I2C mcp9808(&Wire, I2C_ADDRESS);
+
 void setup() {
   Serial.begin(9600);
+  while(!Serial);
+
   Wire.begin();
   dht.begin();
+
+  setup_temperature();
 }
 
 void loop() {
@@ -27,8 +36,8 @@ void loop() {
   float* temp_hum_val = read_temp_and_humidity();
   Serial.print("Humidity : ");
   Serial.print(temp_hum_val[0]);
-  Serial.print("%\t");
-  Serial.print("Temperature: ");
+  Serial.println("%");
+  Serial.print("Temperature n°1 : ");
   Serial.print(temp_hum_val[1]);
   Serial.println("°C");
 
@@ -38,7 +47,13 @@ void loop() {
   Serial.print(lux);
   Serial.println(" lx");
 
-  delay(500);
+  // Temperature
+  float temp = read_temperature();
+  Serial.print("Temperature n°2 : ");
+  Serial.print(temp);
+  Serial.println("°C");
+
+  delay(1000);
 }
 
 /**
@@ -94,4 +109,27 @@ uint8_t readReg(uint8_t reg, const void* pBuf, size_t size)
     _pBuf[i] = Wire.read();
   }
   return size;
+}
+
+void setup_temperature() {
+  while(!mcp9808.begin()){
+    Serial.println("begin failed!");
+    delay(1000);
+  } Serial.println("begin success!");
+
+  if(!mcp9808.wakeUpMode()){
+    Serial.println("Register locked, Please unlock!");
+  }else{
+    Serial.println("Wake up sensor successfully, can read the temperature!");
+  }
+
+  if(mcp9808.setResolution(RESOLUTION_0_125)){
+    Serial.println("Set temp resolution successfully!");
+  }else{
+    Serial.println("parameter error!");
+  }
+}
+
+float read_temperature() {
+  return mcp9808.getTemperature();
 }
