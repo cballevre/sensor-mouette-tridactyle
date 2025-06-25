@@ -1,7 +1,10 @@
 # sensor-mouette-tridactyle
 
-link to "Grove - Temperature&Humidity Sensor Pro(DHT22)" doc :
-[Link Text](https://wiki.seeedstudio.com/Grove-Temperature_and_Humidity_Sensor_Pro/)
+## Sensors
+
+- Wind
+- Temperature and humidity : DHT22 ([docs](https://wiki.seeedstudio.com/Grove-Temperature_and_Humidity_Sensor_Pro/))
+- Luminosity : I2C Waterproof Ambient Light Sensor 1-65535lx ([docs](https://wiki.dfrobot.com/SKU_SEN0562_Gravity_I2C_Waterproof_Ambient_Light_Sensor_1_65535lx))
 
 ## Schema
 
