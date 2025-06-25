@@ -1,9 +1,15 @@
 #include "Grove_Temperature_And_Humidity_Sensor.h"
+#include "Wire.h"
 
 // Configuration for temperature and humidity
-#define DHTTYPE DHT22   // DHT 22  (AM2302)
+#define DHTTYPE DHT22 // DHT 22 (AM2302)
 #define DHTPIN 25
 DHT dht(DHTPIN, DHTTYPE);
+
+// Configuration for lux
+#define address 0x23 // I2C address 0x23
+uint8_t buf[4] = {0};
+uint16_t data, data1;
 
 void setup() {
   Serial.begin(9600);
@@ -26,11 +32,17 @@ void loop() {
   Serial.print(temp_hum_val[1]);
   Serial.println("°C");
 
+  // Luminosity
+  int lux = read_lux();
+  Serial.print("Lux : ");
+  Serial.print(lux);
+  Serial.println(" lx");
+
   delay(500);
 }
 
 /**
-Read wind into a scale in m/s
+  Read wind into a scale in m/s
 */
 int read_wind() {
   int sensorValue = analogRead(A0);
@@ -53,4 +65,33 @@ float* read_temp_and_humidity() {
     temp_hum_val[1] = 0;
     return temp_hum_val;
   }
+}
+
+/**
+  Read luminosity
+*/
+int read_lux() {
+  readReg(0x10, buf, 2); // Register address 0x10
+  data = buf[0] << 8 | buf[1];
+  float lux = (((float)data )/1.2);
+  return lux;
+}
+
+uint8_t readReg(uint8_t reg, const void* pBuf, size_t size)
+{
+  if (pBuf == NULL) {
+    Serial.println("pBuf ERROR!! : null pointer");
+  }
+  uint8_t * _pBuf = (uint8_t *)pBuf;
+  Wire.beginTransmission(address);
+  Wire.write(reg);
+  if ( Wire.endTransmission() != 0) {
+    return 0;
+  }
+  delay(20);
+  Wire.requestFrom(address, (uint8_t) size);
+  for (uint16_t i = 0; i < size; i++) {
+    _pBuf[i] = Wire.read();
+  }
+  return size;
 }
