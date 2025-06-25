@@ -1,6 +1,13 @@
-#include "Grove_Temperature_And_Humidity_Sensor.h"
 #include "Wire.h"
+
+// Library for temperature and humidity
+#include "Grove_Temperature_And_Humidity_Sensor.h"
+
+// Library for temperature
 #include "DFRobot_MCP9808.h"
+
+// Library for RTC
+#include <DS3231.h>
 
 // Configuration for temperature and humidity
 #define DHTTYPE DHT22 // DHT 22 (AM2302)
@@ -16,6 +23,12 @@ uint16_t data, data1;
 #define I2C_ADDRESS  MCP9808_ADDRESS_7
 DFRobot_MCP9808_I2C mcp9808(&Wire, I2C_ADDRESS);
 
+// Configuration for RTC
+DS3231 Clock;
+bool Century = false;
+bool h12;
+bool PM;
+
 void setup() {
   Serial.begin(9600);
   while(!Serial);
@@ -27,6 +40,11 @@ void setup() {
 }
 
 void loop() {
+  // Date and time
+  String datetime = read_datetime();
+  Serial.print("Datetime : ");
+  Serial.println(datetime);
+
   // Wind
   int wind = read_wind();
   Serial.print("Wind speed : ");
@@ -132,4 +150,17 @@ void setup_temperature() {
 
 float read_temperature() {
   return mcp9808.getTemperature();
+}
+
+String read_datetime() {
+  int second = Clock.getSecond();
+  int minute = Clock.getMinute();
+  int hour = Clock.getHour(h12, PM);
+  int date = Clock.getDate();
+  int month = Clock.getMonth(Century);
+  int year = Clock.getYear();
+
+  String dateStr = String(year) + "-" + String(month) + "-" + String(date);
+  String timeStr = String(hour) + ":" + String(minute) + ":" + String(second);
+  return dateStr + " " + timeStr;
 }

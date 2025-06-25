@@ -25,3 +25,4 @@
 
 - https://github.com/Seeed-Studio/Grove_Temperature_And_Humidity_Sensor
 - https://github.com/DFRobot/DFRobot_MCP9808
+- https://github.com/NorthernWidget/DS3231
