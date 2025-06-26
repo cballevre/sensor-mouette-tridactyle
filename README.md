@@ -6,6 +6,8 @@ This sensor is designed to characterise the environmental parameters of cliffs w
 
 ## Components
 
+This logger is based onto an ESP32 FireBeetle from DFRobot.
+
 ### Sensors :
 
 - Wind : Wind Speed Sensor Voltage Type 0-5V SKU SEN0170 ([docs](https://wiki.dfrobot.com/Wind_Speed_Sensor_Voltage_Type_0-5V__SKU_SEN0170))
@@ -17,14 +19,11 @@ This sensor is designed to characterise the environmental parameters of cliffs w
 
 - RTC : DS3231 Precision RTC Breakout for Arduino Wiki - DFRobot ([docs](https://wiki.dfrobot.com/Fermion_DS3231_Precise_RTC_Breakout_SKU_DFR0819))
 - SD reader
-- 3,3V to 12v converter with an enable pin
+- 12V Step-Up Voltage Regulator : U3V40F12 ([ref](https://www.pololu.com/product/4016))
 
 ## Schema
 
-// Connect pin 1 (on the left) of the sensor to +5V
-// Connect pin 2 of the sensor to whatever your DHTPIN is
-// Connect pin 4 (on the right) of the sensor to GROUND
-// Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
+![Schematic of the logger](./hardware/schematic.png)
 
 ## Libraries needed
 
