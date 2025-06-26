@@ -9,6 +9,12 @@
 // Library for RTC
 #include <DS3231.h>
 
+// Library for SD 
+#include "FS.h"
+#include "SD.h"
+#include "SPI.h"
+
+
 // Configuration for temperature and humidity
 #define DHTTYPE DHT22 // DHT 22 (AM2302)
 #define DHTPIN 25
@@ -29,6 +35,12 @@ bool Century = false;
 bool h12;
 bool PM;
 
+// Configuration for SD 
+const int cspin_SD=5;
+String datafile = "/data.csv"; 
+String dataline =";" ;
+
+
 void setup() {
   Serial.begin(9600);
   while(!Serial);
@@ -37,13 +49,28 @@ void setup() {
   dht.begin();
 
   setup_temperature();
+
+  // SD
+  if(!SD.begin(cspin_SD)){
+     Serial.println("Card Mount Failed");
+     return;
+  }
+  if (SD.exists(datafile) == false) {
+  File file = SD.open(datafile, FILE_WRITE);
+  file.println("datetime;wind;humidity;temp_dht;lux;temp_mcp");
+  file.close();
+}
+
+
 }
 
 void loop() {
+
   // Date and time
   String datetime = read_datetime();
   Serial.print("Datetime : ");
   Serial.println(datetime);
+
 
   // Wind
   int wind = read_wind();
@@ -70,6 +97,28 @@ void loop() {
   Serial.print("Temperature n°2 : ");
   Serial.print(temp);
   Serial.println("°C");
+
+  // Dataline 
+  dataline = datetime + ";" +
+           String(wind) + ";" +
+           String(temp_hum_val[0]) + ";" +  
+           String(temp_hum_val[1]) + ";" + 
+           String(lux) + ";" +
+           String(temp);              
+
+  // Save 
+  File file = SD.open(datafile, FILE_APPEND); 
+  if(!file){
+    Serial.println("Failed to open file for writing");
+    return;
+  }
+  if(file.println(dataline)){
+      Serial.println("File written");
+  } else {
+    Serial.println("Write failed");
+  }
+  file.close();
+
 
   delay(1000);
 }
