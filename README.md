@@ -1,5 +1,9 @@
 # Tridactyl Logger
 
+![Picture of two black-legged kittiwakes nesting on a cliff](./docs/assets/header.png)
+
+This sensor is designed to characterise the environmental parameters of cliffs where kittiwakes nest. The sensor collects information on temperature, humidity and wind speed. These parameters can influence the breeding rate. The aim is to compare them between cliffs to define the pressures on the environment.
+
 ## Components
 
 ### Sensors :
@@ -12,7 +16,8 @@
 ### Additionnals :
 
 - RTC : DS3231 Precision RTC Breakout for Arduino Wiki - DFRobot ([docs](https://wiki.dfrobot.com/Fermion_DS3231_Precise_RTC_Breakout_SKU_DFR0819))
-- SD reader :
+- SD reader
+- 3,3V to 12v converter with an enable pin
 
 ## Schema
 
